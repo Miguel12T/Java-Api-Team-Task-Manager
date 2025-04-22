@@ -1,0 +1,64 @@
+package teamTaskManager.domain;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+
+@Entity
+public class Task {
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  // Atributos
+    private Long id;
+    private String name_task;
+    private String description;
+    private String state;
+  // Relación de muchas tareas pueden pertenecer a un solo proyecto
+    @ManyToOne
+    @JoinColumn(name = "project_id")
+    private Project project;
+  // Relación de muchas tareas pueden estar asignadas a un solo usuario
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private UserTask assignedUser;
+  // Getters y Setters
+    public Long getId() {
+      return id;
+    }
+    public void setId(Long id) {
+      this.id = id;
+    }
+    public String getName_task() {
+      return name_task;
+    }
+    public void setName_task(String name_task) {
+      this.name_task = name_task;
+    }
+    public String getDescription() {
+      return description;
+    }
+    public void setDescription(String description) {
+      this.description = description;
+    }
+    public String getState() {
+      return state;
+    }
+    public void setState(String state) {
+      this.state = state;
+    }
+    public Project getProject() {
+      return project;
+    }
+    public void setProject(Project project) {
+      this.project = project;
+    }
+    public UserTask getUser() {
+      return assignedUser;
+    }
+    public void setUser(UserTask user) {
+      this.assignedUser = user;
+    }
+}
