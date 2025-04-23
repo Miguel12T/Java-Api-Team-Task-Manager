@@ -15,15 +15,15 @@ public class UserTask {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
   private String name;
-  private String user_name;
+  private String userName;
   private String password;
   @OneToMany(mappedBy = "assignedUser", cascade = CascadeType.ALL) // Relacion uno a muchos con tareas asignadas
   private List<Task> tasks;
   // Getters y Setters
-    public Long getid() {
+    public Long getId() {
       return id;
     }
-    public void setid(Long id) {
+    public void setId(Long id) {
       this.id = id;
     }
     public String getName() {
@@ -32,16 +32,22 @@ public class UserTask {
     public void setName(String name) {
       this.name = name;
     }
-    public String getUser_name() {
-      return user_name;
+    public String getUserName() {
+      return userName;
     }
-    public void setUser_name(String user_name) {
-      this.user_name = user_name;
+    public void setUserName(String userName) {
+      this.userName = userName;
     }
     public String getPassword() {
       return password;
     }
     public void setPassword(String password) {
       this.password = password;
+    }
+    public List<Task> getTasks() {
+      return tasks;
+    }
+    public void setTasks(List<Task> tasks) {
+      this.tasks = tasks;
     }
 }

@@ -12,11 +12,11 @@ import teamTaskManager.repository.ProjectsRepository;
 public class ProjectsService {
   @Autowired
   private ProjectsRepository projectsRepository;
-  // Obtiene todos los productos
+  // Obtiene el listado de proyectos
     public List<Project> getAllProjects() {
       return projectsRepository.findAll();
     }
-  // Busca proyectos que contengan texto
+  // Busca proyectos de acuerdo al texto ingresado
     public List<Project> searchProjects(String keyword) {
       return projectsRepository.findByNameContainingIgnoreCase(keyword);
     }
