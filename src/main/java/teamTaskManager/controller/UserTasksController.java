@@ -12,6 +12,9 @@ import teamTaskManager.service.UserTaksService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+
 
 @RestController
 @RequestMapping("/users")
@@ -30,6 +33,16 @@ public class UserTasksController {
       return ResponseEntity.ok(created);
     }
     catch (Exception e) {
+      return ResponseEntity.badRequest().body(e.getMessage());
+    }
+  }
+  @PutMapping("/{id}")
+  public ResponseEntity<?> updateUserTask(@PathVariable Long id, @RequestBody UserTask userTask) {
+    try {
+      UserTask update = userTaksService.updateUserTask(id, userTask);
+      return ResponseEntity.ok(update);
+    }
+    catch (IllegalArgumentException e) {
       return ResponseEntity.badRequest().body(e.getMessage());
     }
   }
