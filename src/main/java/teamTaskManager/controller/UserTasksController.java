@@ -8,7 +8,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import teamTaskManager.domain.UserTask;
-import teamTaskManager.service.UserTaksService;
+import teamTaskManager.service.UserTasksService;
+
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,11 +22,19 @@ import org.springframework.web.bind.annotation.PathVariable;
 @RequestMapping("/users")
 public class UserTasksController {
   @Autowired
-  private UserTaksService userTaksService;
+  private UserTasksService userTaksService;
   @GetMapping
   public ResponseEntity<?> getAllUserTasks() {
     List<UserTask> userTask = userTaksService.getAllUserTasks();
     return ResponseEntity.ok(userTask);
+  }
+  @GetMapping("/without-tasks")
+  public List<UserTask> getUserTasksWithoutTasks() {
+    return userTaksService.getUserTasksWithoutTasks();
+  }
+  @GetMapping("/with-tasks")
+  public List<UserTask> getUserTasksWithTasks() {
+    return userTaksService.getUserTasksWithTasks();
   }
   @PostMapping
   public ResponseEntity<?> createUserTask(@RequestBody UserTask userTask) {
@@ -43,6 +53,16 @@ public class UserTasksController {
       return ResponseEntity.ok(update);
     }
     catch (IllegalArgumentException e) {
+      return ResponseEntity.badRequest().body(e.getMessage());
+    }
+  }
+  @DeleteMapping("/{id}")
+  public ResponseEntity<?> deleteUserTask(@PathVariable Long id) {
+    try {
+      userTaksService.deleteUserTask(id);
+      return ResponseEntity.noContent().build();
+    }
+    catch (IllegalStateException | IllegalArgumentException e) {
       return ResponseEntity.badRequest().body(e.getMessage());
     }
   }

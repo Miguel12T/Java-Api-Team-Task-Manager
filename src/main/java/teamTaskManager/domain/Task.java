@@ -13,16 +13,16 @@ public class Task {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   // Atributos
     private Long id;
-    private String name_task;
+    private String nameTask;
     private String description;
     private String state;
   // Relación de muchas tareas pueden pertenecer a un solo proyecto
     @ManyToOne
-    @JoinColumn(name = "project_id")
+    @JoinColumn(name = "projectId")
     private Project project;
   // Relación de muchas tareas pueden estar asignadas a un solo usuario
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "userId")
     private UserTask assignedUser;
   // Getters y Setters
     public Long getId() {
@@ -31,11 +31,11 @@ public class Task {
     public void setId(Long id) {
       this.id = id;
     }
-    public String getName_task() {
-      return name_task;
+    public String getNameTask() {
+      return nameTask;
     }
-    public void setName_task(String name_task) {
-      this.name_task = name_task;
+    public void setNameTask(String nameTask) {
+      this.nameTask = nameTask;
     }
     public String getDescription() {
       return description;
