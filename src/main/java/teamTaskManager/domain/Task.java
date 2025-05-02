@@ -1,5 +1,9 @@
 package teamTaskManager.domain;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -8,6 +12,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
 @Entity
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Task {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -55,10 +60,10 @@ public class Task {
     public void setProject(Project project) {
       this.project = project;
     }
-    public UserTask getUser() {
+    public UserTask getAssignedUser() {
       return assignedUser;
     }
-    public void setUser(UserTask user) {
+    public void setAssignedUser(UserTask user) {
       this.assignedUser = user;
     }
 }
