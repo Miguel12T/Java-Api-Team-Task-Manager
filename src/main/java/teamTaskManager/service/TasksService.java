@@ -1,6 +1,7 @@
 package teamTaskManager.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -8,6 +9,8 @@ import org.springframework.stereotype.Service;
 import teamTaskManager.domain.Project;
 import teamTaskManager.domain.Task;
 import teamTaskManager.domain.UserTask;
+import teamTaskManager.dto.TaskDTO;
+import teamTaskManager.dto.TaskResponseDTO;
 import teamTaskManager.repository.ProjectsRepository;
 import teamTaskManager.repository.TasksRepository;
 import teamTaskManager.repository.UserTasksRepository;
@@ -24,35 +27,55 @@ public class TasksService {
     this.userTasksRepository = userTasksRepository;
   }
   // Obtiene el listado de las tareas
-    public List<Task> getAllTasks() {
-      return tasksRepository.findAll();
+    public List<TaskResponseDTO> getAllTasks() {
+      List<Task> tasks = tasksRepository.findAll();
+      return tasks.stream()
+                  .map(this::convertToResponse)
+                  .collect(Collectors.toList());
     }
   // Crea las tareas si no existe la misma ya creada en el mismo proyecto
-    public Task createTask(Task task) throws IllegalArgumentException {
-      projectsRepository.findById(task.getProject().getId())
+    public Task createTask(TaskDTO taskDto) throws IllegalArgumentException {
+      Project project =  projectsRepository.findById(taskDto.getProjectId())
                         .orElseThrow(()-> new IllegalArgumentException("Proyecto no encontrado."));
-      userTasksRepository.findById(task.getAssignedUser().getId())
+      UserTask userTask =  userTasksRepository.findById(taskDto.getAssignedUserId())
                         .orElseThrow(()-> new IllegalArgumentException("Usuario no encontrado."));
-      if (tasksRepository.findByNameTaskIgnoreCaseAndProjectId(task.getNameTask(), task.getProject().getId()).isPresent()) {
+      if (tasksRepository.findByNameTaskIgnoreCaseAndProjectId(taskDto.getNameTask(), taskDto.getProjectId()).isPresent()) {
         throw new IllegalArgumentException("Ya existe una tarea con ese nombre");
       }
+      Task task = new Task();
+      task.setNameTask(taskDto.getNameTask());
+      task.setDescription(taskDto.getDescription());
+      task.setState(taskDto.getState());
+      task.setProject(project);
+      task.setAssignedUser(userTask);
       return tasksRepository.save(task);
     }
   // Actualiza los datos de las tareas
-    public Task editTask(Long id, Task taskEdit) throws IllegalArgumentException {
+    public Task editTask(Long id, TaskDTO taskDto) throws IllegalArgumentException {
       Task task = tasksRepository.findById(id)
                   .orElseThrow(() -> new IllegalArgumentException("Tarea no encontrada."));
-      Project project = projectsRepository.findById(taskEdit.getProject().getId())
+      Project project = projectsRepository.findById(taskDto.getProjectId())
                   .orElseThrow(()-> new IllegalArgumentException("Proyecto no encontrado."));
-      UserTask user =  userTasksRepository.findById(taskEdit.getAssignedUser().getId())
+      UserTask user =  userTasksRepository.findById(taskDto.getAssignedUserId())
                   .orElseThrow(()-> new IllegalArgumentException("Usuario no encontrado."));
-      if (tasksRepository.findByNameTaskIgnoreCaseAndProjectIdAndIdNot(taskEdit.getNameTask(), taskEdit.getProject().getId(), id).isPresent())
+      if (tasksRepository.findByNameTaskIgnoreCaseAndProjectIdAndIdNot(taskDto.getNameTask(), taskDto.getProjectId(), id).isPresent())
         throw new IllegalArgumentException("Ya existe una tarea con ese nombre");
-      task.setNameTask(taskEdit.getNameTask());
-      task.setDescription(taskEdit.getDescription());
-      task.setState(taskEdit.getState());
+      task.setNameTask(taskDto.getNameTask());
+      task.setDescription(taskDto.getDescription());
+      task.setState(taskDto.getState());
       task.setProject(project); // Asignar el proyecto completo
       task.setAssignedUser(user); // Asignar el usuario completo
       return tasksRepository.save(task);
+    }
+  // Convierte una entidad JPA (Task) a un DTO de respuesta (TaskResponseDTO)
+    public TaskResponseDTO convertToResponse(Task task) {
+      TaskResponseDTO dto = new TaskResponseDTO();
+      dto.setId(task.getId());
+      dto.setNameTask(task.getNameTask());
+      dto.setDescription(task.getDescription());
+      dto.setState(task.getState());
+      dto.setProjectName(task.getProject().getName());
+      dto.setAssignedUsername(task.getAssignedUser().getUserName());
+      return dto;
     }
 }

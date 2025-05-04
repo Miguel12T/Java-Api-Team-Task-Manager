@@ -2,21 +2,20 @@ package teamTaskManager.controller;
 
 import java.util.List;
 
-import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import teamTaskManager.domain.Task;
+import teamTaskManager.dto.TaskDTO;
+import teamTaskManager.dto.TaskResponseDTO;
 import teamTaskManager.service.TasksService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-
-
 
 @RestController
 @RequestMapping("/tasks")
@@ -25,13 +24,13 @@ public class TaskController {
   TasksService tasksService;
   @GetMapping
   public ResponseEntity<?> getAllTasks() {
-    List<Task> tasks = tasksService.getAllTasks();
+    List<TaskResponseDTO> tasks = tasksService.getAllTasks();
     return ResponseEntity.ok(tasks);
   }
   @PostMapping
-  public ResponseEntity<?> createTask(@RequestBody Task task) {
+  public ResponseEntity<?> createTask(@RequestBody TaskDTO taskDto) {
     try {
-      Task created = tasksService.createTask(task);
+      Task created = tasksService.createTask(taskDto);
       return ResponseEntity.ok(created);
     }
     catch (Exception e) {
@@ -39,9 +38,9 @@ public class TaskController {
     }
   }
   @PutMapping("/{id}")
-  public ResponseEntity<?> editTask(@PathVariable Long id, @RequestBody Task task) {
+  public ResponseEntity<?> editTask(@PathVariable Long id, @RequestBody TaskDTO taskDto) {
     try {
-      Task update = tasksService.editTask(id, task);
+      Task update = tasksService.editTask(id, taskDto);
       return ResponseEntity.ok(update);
     }
     catch (IllegalArgumentException e) {
@@ -49,4 +48,3 @@ public class TaskController {
     }
   }
 }
-  
