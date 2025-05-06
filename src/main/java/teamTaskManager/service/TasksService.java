@@ -67,6 +67,14 @@ public class TasksService {
       task.setAssignedUser(user); // Asignar el usuario completo
       return tasksRepository.save(task);
     }
+  // Elimina la tarea si el estado es 'por comenzar'
+    public void deleteTask(Long id) throws IllegalStateException {
+      Task task = tasksRepository.findById(id)
+                  .orElseThrow(() -> new IllegalArgumentException("Tarea no encontrada"));
+      if (!task.getState().equalsIgnoreCase("por comenzar"))
+        throw new IllegalStateException("No se puede eliminar la tarea esta siendo realizada");
+      tasksRepository.delete(task);
+    }
   // Convierte una entidad JPA (Task) a un DTO de respuesta (TaskResponseDTO)
     public TaskResponseDTO convertToResponse(Task task) {
       TaskResponseDTO dto = new TaskResponseDTO();
@@ -76,6 +84,7 @@ public class TasksService {
       dto.setState(task.getState());
       dto.setProjectName(task.getProject().getName());
       dto.setAssignedUsername(task.getAssignedUser().getUserName());
+      dto.setNameUser(task.getAssignedUser().getName());
       return dto;
     }
 }

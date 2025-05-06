@@ -7,6 +7,7 @@ public class TaskResponseDTO {
     private String description;
     private String state;
     private String projectName;
+    private String nameUser;
     private String assignedUsername;
   // Constructor
     public TaskResponseDTO() {}
@@ -46,5 +47,11 @@ public class TaskResponseDTO {
     }
     public void setAssignedUsername(String assignedUsername) {
       this.assignedUsername = assignedUsername;
+    }
+    public String getNameUser() {
+      return nameUser;
+    }
+    public void setNameUser(String nameUser) {
+      this.nameUser = nameUser;
     }
 }

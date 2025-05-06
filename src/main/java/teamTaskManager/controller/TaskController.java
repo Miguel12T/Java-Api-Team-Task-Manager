@@ -11,6 +11,8 @@ import teamTaskManager.domain.Task;
 import teamTaskManager.dto.TaskDTO;
 import teamTaskManager.dto.TaskResponseDTO;
 import teamTaskManager.service.TasksService;
+
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -44,6 +46,16 @@ public class TaskController {
       return ResponseEntity.ok(update);
     }
     catch (IllegalArgumentException e) {
+      return ResponseEntity.badRequest().body(e.getMessage());
+    }
+  }
+  @DeleteMapping("/{id}")
+  public ResponseEntity<?> deleteTask(@PathVariable Long id) {
+    try {
+      tasksService.deleteTask(id);
+      return ResponseEntity.noContent().build();
+    }
+    catch (Exception e) {
       return ResponseEntity.badRequest().body(e.getMessage());
     }
   }
