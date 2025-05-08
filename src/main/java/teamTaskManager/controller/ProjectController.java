@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import teamTaskManager.domain.Project;
+import teamTaskManager.dto.ProjectDTO;
+import teamTaskManager.dto.ProjectResponseDTO;
 import teamTaskManager.service.ProjectsService;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -25,27 +27,27 @@ public class ProjectController {
   private ProjectsService projectsService;
   @GetMapping
   public ResponseEntity<?> getProjects() {
-    List<Project> projects = projectsService.getAllProjects();
+    List<ProjectResponseDTO> projects = projectsService.getAllProjects();
     return ResponseEntity.ok(projects);
   }
   @GetMapping("/with-tasks")
-  public ResponseEntity<List<Project>> getProjectsWithTasks() {
-    List<Project> projects = projectsService.getProjectsWithTasks();
+  public ResponseEntity<List<ProjectResponseDTO>> getProjectsWithTasks() {
+    List<ProjectResponseDTO> projects = projectsService.getProjectsWithTasks();
     return ResponseEntity.ok(projects);
   }
   @GetMapping("/without-tasks")
-  public ResponseEntity<List<Project>> getProjectsWithoutTasks() {
-    List<Project> projects = projectsService.getProjectsWithoutTasks();
+  public ResponseEntity<List<ProjectResponseDTO>> getProjectsWithoutTasks() {
+    List<ProjectResponseDTO> projects = projectsService.getProjectsWithoutTasks();
     return ResponseEntity.ok(projects);
   }
   @GetMapping("/search")
-  public List<Project> searchProjects(@RequestParam String keyword) {
+  public List<ProjectResponseDTO> searchProjects(@RequestParam String keyword) {
     return projectsService.searchProjects(keyword);
   }
   @PostMapping
-  public ResponseEntity<?> createProject(@RequestBody Project project) {
+  public ResponseEntity<?> createProject(@RequestBody ProjectDTO projectDto) {
     try {
-      Project created = projectsService.createProject(project);
+      Project created = projectsService.createProject(projectDto);
       return ResponseEntity.ok(created);
     }
     catch (Exception e) {
@@ -53,9 +55,9 @@ public class ProjectController {
     }
   }
   @PutMapping("/{id}")
-  public ResponseEntity<?> editProject(@PathVariable Long id, @RequestBody Project project) {
+  public ResponseEntity<?> editProject(@PathVariable Long id, @RequestBody ProjectDTO projectDto) {
     try {
-      Project update = projectsService.editProject(id, project);
+      Project update = projectsService.editProject(id, projectDto);
       return ResponseEntity.ok(update);
     }
     catch (IllegalArgumentException e) {
