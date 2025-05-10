@@ -40,7 +40,7 @@ public class ProjectsService {
     }
   // Busca proyectos sin tareas
     public List<ProjectResponseDTO> getProjectsWithoutTasks() {
-      List<Project> projects =projectsRepository.findByTasksIsEmpty();
+      List<Project> projects = projectsRepository.findByTasksIsEmpty();
       return projects.stream()
                      .map(this::convertToResponseProjects)
                      .collect(Collectors.toList());

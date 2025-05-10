@@ -4,7 +4,7 @@ public class ProjectDTO {
   // Atributos
     private Long id;
     private String nameProject;
-  // Constructo
+  // Constructor
     public ProjectDTO() {}
   // Getters y Setters
     public Long getId() {

@@ -39,9 +39,8 @@ public class TasksService {
                         .orElseThrow(()-> new IllegalArgumentException("Proyecto no encontrado."));
       UserTask userTask =  userTasksRepository.findById(taskDto.getAssignedUserId())
                         .orElseThrow(()-> new IllegalArgumentException("Usuario no encontrado."));
-      if (tasksRepository.findByNameTaskIgnoreCaseAndProjectId(taskDto.getNameTask(), taskDto.getProjectId()).isPresent()) {
+      if (tasksRepository.findByNameTaskIgnoreCaseAndProjectId(taskDto.getNameTask(), taskDto.getProjectId()).isPresent())
         throw new IllegalArgumentException("Ya existe una tarea con ese nombre");
-      }
       Task task = new Task();
       task.setNameTask(taskDto.getNameTask());
       task.setDescription(taskDto.getDescription());
@@ -63,8 +62,8 @@ public class TasksService {
       task.setNameTask(taskDto.getNameTask());
       task.setDescription(taskDto.getDescription());
       task.setState(taskDto.getState());
-      task.setProject(project); // Asignar el proyecto completo
-      task.setAssignedUser(user); // Asignar el usuario completo
+      task.setProject(project);
+      task.setAssignedUser(user);
       return tasksRepository.save(task);
     }
   // Elimina la tarea si el estado es 'por comenzar'

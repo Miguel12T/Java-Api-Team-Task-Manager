@@ -31,12 +31,12 @@ public class ProjectController {
     return ResponseEntity.ok(projects);
   }
   @GetMapping("/with-tasks")
-  public ResponseEntity<List<ProjectResponseDTO>> getProjectsWithTasks() {
+  public ResponseEntity<?> getProjectsWithTasks() {
     List<ProjectResponseDTO> projects = projectsService.getProjectsWithTasks();
     return ResponseEntity.ok(projects);
   }
   @GetMapping("/without-tasks")
-  public ResponseEntity<List<ProjectResponseDTO>> getProjectsWithoutTasks() {
+  public ResponseEntity<?> getProjectsWithoutTasks() {
     List<ProjectResponseDTO> projects = projectsService.getProjectsWithoutTasks();
     return ResponseEntity.ok(projects);
   }

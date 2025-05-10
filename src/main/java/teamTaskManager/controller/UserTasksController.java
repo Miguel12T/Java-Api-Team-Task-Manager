@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import teamTaskManager.domain.UserTask;
+import teamTaskManager.dto.UserTaskDTO;
+import teamTaskManager.dto.UserTaskResponseDTO;
 import teamTaskManager.service.UserTasksService;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,21 +26,23 @@ public class UserTasksController {
   private UserTasksService userTaksService;
   @GetMapping
   public ResponseEntity<?> getAllUserTasks() {
-    List<UserTask> userTask = userTaksService.getAllUserTasks();
-    return ResponseEntity.ok(userTask);
+    List<UserTaskResponseDTO> usersTasks = userTaksService.getAllUserTasks();
+    return ResponseEntity.ok(usersTasks);
   }
   @GetMapping("/without-tasks")
-  public List<UserTask> getUserTasksWithoutTasks() {
-    return userTaksService.getUserTasksWithoutTasks();
+  public ResponseEntity<?> getUserTasksWithoutTasks() {
+    List<UserTaskResponseDTO> usersTasks = userTaksService.getUserTasksWithoutTasks();
+    return ResponseEntity.ok(usersTasks);
   }
   @GetMapping("/with-tasks")
-  public List<UserTask> getUserTasksWithTasks() {
-    return userTaksService.getUserTasksWithTasks();
+  public ResponseEntity<?> getUserTasksWithTasks() {
+    List<UserTaskResponseDTO> usersTasks = userTaksService.getUserTasksWithTasks();
+    return ResponseEntity.ok(usersTasks);
   }
   @PostMapping
-  public ResponseEntity<?> createUserTask(@RequestBody UserTask userTask) {
+  public ResponseEntity<?> createUserTask(@RequestBody UserTaskDTO userTaskDto) {
     try {
-      UserTask created = userTaksService.createUserTask(userTask);
+      UserTask created = userTaksService.createUserTask(userTaskDto);
       return ResponseEntity.ok(created);
     }
     catch (Exception e) {
@@ -46,9 +50,9 @@ public class UserTasksController {
     }
   }
   @PutMapping("/{id}")
-  public ResponseEntity<?> updateUserTask(@PathVariable Long id, @RequestBody UserTask userTask) {
+  public ResponseEntity<?> updateUserTask(@PathVariable Long id, @RequestBody UserTaskDTO userTaskDto) {
     try {
-      UserTask update = userTaksService.updateUserTask(id, userTask);
+      UserTask update = userTaksService.updateUserTask(id, userTaskDto);
       return ResponseEntity.ok(update);
     }
     catch (IllegalArgumentException e) {
