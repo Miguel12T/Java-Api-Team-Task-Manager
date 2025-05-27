@@ -10,4 +10,6 @@ import teamTaskManager.domain.User;
 @Repository
 public interface UsersRespository extends JpaRepository<User, String> {
   Optional<User> findByUserName(String userName);
+
+  boolean existsByUserName(String userName);
 }

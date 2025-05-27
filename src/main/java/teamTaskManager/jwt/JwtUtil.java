@@ -1,30 +1,30 @@
 package teamTaskManager.jwt;
 
-import java.nio.charset.StandardCharsets;
-import java.util.Date;
-
-import javax.crypto.SecretKey;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
-
+import org.springframework.stereotype.Component;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import java.nio.charset.StandardCharsets;
+import java.util.Date;
+import javax.crypto.SecretKey;
 
+@Component
 public class JwtUtil {
   @Value("${jwt.secret}")
   private String secret;
   @Value("${jwt.expiration}")
   private int expiration;
-  public String generateToken(Authentication authentication) {
-    UserDetails mainUser = (UserDetails) authentication.getPrincipal();
+  public String generateToken(Authentication authResult) {
+    UserDetails mainUser = (UserDetails) authResult.getPrincipal();
     SecretKey key        = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
     return Jwts.builder().setSubject(mainUser.getUsername())
            .setIssuedAt(new Date())
            .setExpiration(new Date(new Date().getTime() + expiration + 1000L))
-           .signWith(key)
+           .signWith(key, SignatureAlgorithm.HS256)
            .compact();
   }
   public Boolean validateToken(String token, UserDetails userDetails) {
@@ -39,7 +39,11 @@ public class JwtUtil {
   }
   public Claims extractAllClaims(String token) {
     SecretKey key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
-    return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
+    return Jwts.parserBuilder()
+               .setSigningKey(key)
+               .build()
+               .parseClaimsJws(token)
+               .getBody();
   }
   public String extractUserName(String token) {
     return extractAllClaims(token).getSubject();
